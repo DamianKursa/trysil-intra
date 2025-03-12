@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import { useRouter } from "next/router"
 
 interface UserProfileData {
   id: number
@@ -11,6 +12,7 @@ const UserProfile: React.FC = () => {
   const [user, setUser] = useState<UserProfileData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+  const router = useRouter()
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -31,6 +33,21 @@ const UserProfile: React.FC = () => {
     fetchUserProfile()
   }, [])
 
+  const handleLogout = async () => {
+    try {
+      const res = await fetch("/api/auth/logout", {
+        method: "POST",
+      })
+      if (!res.ok) {
+        throw new Error("Logout failed")
+      }
+      // Optionally, clear any client-side storage if needed
+      router.push("/login")
+    } catch (err: any) {
+      setError(err.message || "Logout error")
+    }
+  }
+
   if (loading) return <p>Loading...</p>
   if (error) return <p className='text-red-500'>{error}</p>
   if (!user) return null
@@ -41,9 +58,15 @@ const UserProfile: React.FC = () => {
       <p>
         <strong>Name:</strong> {user.name}
       </p>
-      <p>
+      <p className='mb-4'>
         <strong>Email:</strong> {user.email}
       </p>
+      <button
+        onClick={handleLogout}
+        className='bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition-all'
+      >
+        Log Out
+      </button>
     </div>
   )
 }
