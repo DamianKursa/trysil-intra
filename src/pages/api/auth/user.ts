@@ -1,40 +1,24 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import axios from 'axios';
-import { parse } from 'cookie';
+// pages/api/auth/user.ts
+import type { NextApiRequest, NextApiResponse } from "next";
+import axios from "axios";
+import { parseCookies } from "@/utils/cookies"; // Adjust the path as needed
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'GET') {
-    res.setHeader('Allow', ['GET']);
-    return res.status(405).json({ message: `Method ${req.method} Not Allowed` });
-  }
-
-  const { token } = parse(req.headers.cookie || '');
+  const cookies = parseCookies(req.headers.cookie || "");
+  const token = cookies.token;
 
   if (!token) {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
-
-  if (!process.env.WORDPRESS_API_URL) {
-    return res.status(500).json({ message: 'Server misconfiguration: Missing API URL' });
+    return res.status(401).json({ message: "Unauthorized: No token found" });
   }
 
   try {
-    const response = await axios.get(`${process.env.WORDPRESS_API_URL}/wp-json/wc/v3/customers/me`, {
+    const response = await axios.get(`${process.env.WORDPRESS_API_URL}/wp-json/wp/v2/users/me`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
-    const { id, first_name, last_name, email, billing, shipping, orders } = response.data;
-
-    return res.status(200).json({
-      id,
-      first_name,
-      last_name,
-      email,
-      billing,
-      shipping,
-      orders,
-    });
+    const { id, name, username, email } = response.data;
+    res.status(200).json({ id, name, username, email });
   } catch (error: any) {
-    return res.status(error.response?.status || 500).json({ message: error.message });
+    res.status(error.response?.status || 500).json({ message: "Failed to fetch user profile" });
   }
 }
