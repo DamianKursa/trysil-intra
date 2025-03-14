@@ -68,7 +68,7 @@ const LoginForm: React.FC = () => {
               : "opacity-100"
           }`}
         >
-          Email address *
+          Username or email address *
         </span>
       </div>
 

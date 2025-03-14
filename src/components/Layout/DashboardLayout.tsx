@@ -1,4 +1,4 @@
-// components/layouts/DashboardLayout.tsx
+// components/Layout/DashboardLayout.tsx
 import React, { useEffect, useState } from "react"
 import Link from "next/link"
 import axios from "axios"
@@ -44,7 +44,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
       if (!res.ok) {
         throw new Error("Logout failed")
       }
-      // Redirect to login or home
       router.push("/login")
     } catch (err: any) {
       setError(err.message || "Logout error")
@@ -55,14 +54,19 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
     <div className='min-h-screen flex bg-gray-100'>
       {/* SIDEBAR */}
       <aside className='w-64 bg-white shadow-lg'>
-        <div className='p-6 text-xl font-bold border-b'>
-          <img src='/images/logo.webp' alt='Trysil RMM Logo' className='h-10' />
+        <div className='p-6 border-b'>
+          <img
+            src='/images/logo.webp'
+            alt='Trysil RMM Logo'
+            className='h-10 mx-auto'
+          />
         </div>
         <nav className='p-4'>
           <ul className='space-y-2'>
             <li>
               <Link href='/dashboard'>
                 <span className='flex items-center p-2 rounded hover:bg-gray-200 transition-colors cursor-pointer'>
+                  {/* Dashboard Icon */}
                   <svg
                     className='w-5 h-5 mr-3 text-gray-600'
                     fill='none'
@@ -83,6 +87,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             <li>
               <Link href='#'>
                 <span className='flex items-center p-2 rounded hover:bg-gray-200 transition-colors cursor-pointer'>
+                  {/* Tables Icon */}
                   <svg
                     className='w-5 h-5 mr-3 text-gray-600'
                     fill='none'
@@ -103,6 +108,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             <li>
               <Link href='#'>
                 <span className='flex items-center p-2 rounded hover:bg-gray-200 transition-colors cursor-pointer'>
+                  {/* Analytics Icon */}
                   <svg
                     className='w-5 h-5 mr-3 text-gray-600'
                     fill='none'
@@ -133,34 +139,27 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
       {/* MAIN CONTENT */}
       <div className='flex-grow flex flex-col'>
         {/* HEADER */}
-        <header className='bg-white h-16 px-4 flex  items-center justify-between shadow'>
+        <header className='bg-white h-16 px-4 flex items-center justify-between shadow'>
           {/* Left: Search */}
-          <div className='flex items-center py-6 space-x-4'>
-            <div className='relative'>
-              <input
-                type='text'
-                placeholder='Type to search...'
-                className='border border-gray-300 rounded-full px-3 py-1 focus:outline-none'
-              />
-            </div>
+          <div className='flex items-center space-x-4'>
+            <input
+              type='text'
+              placeholder='Type to search...'
+              className='border border-gray-300 rounded-full px-3 py-1 focus:outline-none'
+            />
           </div>
-
           {/* Right: User Profile */}
           <div className='flex items-center space-x-4 relative'>
-            {/* Loading / Error States */}
             {loading && <span>Loading...</span>}
-            {!loading && error && <span className='text-red-500'>{error}</span>}
-
-            {/* If user is fetched successfully */}
-            {user && !error && !loading && (
+            {error && <span className='text-red-500'>{error}</span>}
+            {user && (
               <div className='relative'>
                 <button
-                  className='flex items-center space-x-2 focus:outline-none'
                   onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className='flex items-center space-x-2 focus:outline-none'
                 >
                   <span className='text-gray-600'>{user.name}</span>
                 </button>
-                {/* Dropdown */}
                 {dropdownOpen && (
                   <div className='absolute right-0 mt-2 bg-white shadow-md rounded py-2 px-4 z-50 w-48'>
                     <p className='text-sm font-semibold'>{user.email}</p>
@@ -174,8 +173,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                 )}
               </div>
             )}
-
-            {/* If no user data (e.g., not logged in) */}
             {!user && !loading && !error && (
               <Link href='/login' className='text-blue-600 hover:underline'>
                 Login
