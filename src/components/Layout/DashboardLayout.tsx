@@ -4,6 +4,7 @@ import Link from "next/link"
 import axios from "axios"
 import { useRouter } from "next/router"
 import CalendarSection from "@/components/Calendar/CalendarSection"
+import UserSearchComponent from "@/components/Search/UserSearchComponent"
 
 interface DashboardLayoutProps {
   children: React.ReactNode
@@ -21,6 +22,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -134,7 +136,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             </li>
             {/* Add more nav links as needed */}
           </ul>
-          {/* Calendar Section can remain inside sidebar or be placed elsewhere */}
+          {/* Calendar Section */}
           <div className='mt-8'>
             <CalendarSection />
           </div>
@@ -151,6 +153,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
               type='text'
               placeholder='Type to search...'
               className='border border-gray-300 rounded-full px-3 py-1 focus:outline-none'
+              onFocus={() => setSearchOpen(true)}
             />
           </div>
           {/* Right: User Profile */}
@@ -189,6 +192,11 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
         {/* Main Content: scrollable */}
         <main className='flex-grow overflow-y-auto p-4'>{children}</main>
       </div>
+
+      {/* Search Modal */}
+      {searchOpen && (
+        <UserSearchComponent onClose={() => setSearchOpen(false)} />
+      )}
     </div>
   )
 }
