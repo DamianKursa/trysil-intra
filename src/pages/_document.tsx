@@ -5,7 +5,7 @@ export default function Document() {
   return (
     <Html lang='pl-PL'>
       <Head>
-        {/* Meta Tags */}
+        {/* Basic Meta Tags */}
         <meta charSet='UTF-8' />
         <meta name='viewport' content='width=device-width, initial-scale=1.0' />
         <meta
@@ -20,7 +20,7 @@ export default function Document() {
         <meta name='robots' content='index, follow' />
         <link rel='canonical' href='https://trysil-intra.vercel.app' />
 
-        {/* Open Graph Meta Tags for Social Media */}
+        {/* Open Graph Meta Tags */}
         <meta
           property='og:title'
           content='Trysil Intranet – System zarządzania wewnętrznego'
@@ -50,6 +50,14 @@ export default function Document() {
           href='https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap'
           rel='stylesheet'
         />
+
+        {/* PWA Meta Tags for iOS */}
+        <meta name='apple-mobile-web-app-capable' content='yes' />
+        <meta
+          name='apple-mobile-web-app-status-bar-style'
+          content='black-translucent'
+        />
+        <meta name='apple-mobile-web-app-title' content='Trysil Intranet' />
       </Head>
       <body className='bg-beige-light'>
         <Main />
