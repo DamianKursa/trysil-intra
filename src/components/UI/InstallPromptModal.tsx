@@ -5,6 +5,7 @@ const InstallPromptModal: React.FC = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
   const [showPrompt, setShowPrompt] = useState(false)
   const [isIOS, setIsIOS] = useState(false)
+  const [promptDismissed, setPromptDismissed] = useState(false)
 
   useEffect(() => {
     // Check if device is iOS
@@ -36,21 +37,27 @@ const InstallPromptModal: React.FC = () => {
     setDeferredPrompt(null)
   }
 
-  // If not showing prompt and not on iOS, return null
-  if (!showPrompt && !isIOS) return null
+  const handleClose = () => {
+    setShowPrompt(false)
+    setPromptDismissed(true)
+  }
+
+  // For non-iOS: render only if showPrompt is true.
+  // For iOS: render if showPrompt is true and the prompt hasn't been dismissed.
+  if (!showPrompt && (!isIOS || promptDismissed)) return null
 
   return (
     <div className='fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-4'>
-      <div className='bg-white rounded-xl shadow-lg p-6 w-full max-w-sm'>
+      <div className='bg-white rounded-xl shadow-lg p-6 w-[90%] max-w-sm'>
         <h2 className='text-xl font-bold mb-4'>Install App</h2>
         {isIOS ? (
           <>
             <p className='mb-4'>
               To install this app on your iPhone, tap the share button in Safari
-              and then select "Add to Home Screen".
+              and then select "Add to Home Screen."
             </p>
             <button
-              onClick={() => setShowPrompt(false)}
+              onClick={handleClose}
               className='w-full bg-blue-600 text-white py-2 rounded'
             >
               Close
