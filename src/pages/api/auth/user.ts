@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const response = await axios.get(`${process.env.WORDPRESS_API_URL}/wp-json/wp/v2/users/me`, {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_WORDPRESS_API_URL}/wp-json/wp/v2/users/me`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 

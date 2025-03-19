@@ -14,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ message: "Missing username or password" });
   }
 
-  const jwtEndpoint = `${process.env.WORDPRESS_API_URL}/wp-json/jwt-auth/v1/token`;
+  const jwtEndpoint = `${process.env.NEXT_PUBLIC_WORDPRESS_API_URL}/wp-json/jwt-auth/v1/token`;
 
   try {
     const response = await axios.post(jwtEndpoint, { username, password }, {
