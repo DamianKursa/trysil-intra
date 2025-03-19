@@ -5,6 +5,7 @@ import axios from "axios"
 import { useRouter } from "next/router"
 import CalendarSection from "@/components/Calendar/CalendarSection"
 import UserSearchComponent from "@/components/Search/UserSearchComponent"
+import InstallPromptModal from "@/components/UI/InstallPromptModal"
 
 interface DashboardLayoutProps {
   children: React.ReactNode
@@ -197,6 +198,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
       {searchOpen && (
         <UserSearchComponent onClose={() => setSearchOpen(false)} />
       )}
+
+      {/* Optional: Install Prompt Modal */}
+      <InstallPromptModal />
     </div>
   )
 }
