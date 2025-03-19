@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react"
 import Link from "next/link"
 import axios from "axios"
 import { useRouter } from "next/router"
+import CalendarSection from "@/components/Calendar/CalendarSection"
 
 interface DashboardLayoutProps {
   children: React.ReactNode
@@ -51,9 +52,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   }
 
   return (
-    <div className='min-h-screen flex bg-gray-100'>
-      {/* SIDEBAR */}
-      <aside className='w-64 bg-white shadow-lg'>
+    <div className='h-screen flex bg-gray-100'>
+      {/* Sidebar: fixed on left */}
+      <aside className='w-64 fixed left-0 top-0 h-screen bg-white shadow-lg'>
         <div className='p-6 border-b'>
           <img
             src='/images/logo.webp'
@@ -133,13 +134,17 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             </li>
             {/* Add more nav links as needed */}
           </ul>
+          {/* Calendar Section can remain inside sidebar or be placed elsewhere */}
+          <div className='mt-8'>
+            <CalendarSection />
+          </div>
         </nav>
       </aside>
 
-      {/* MAIN CONTENT */}
-      <div className='flex-grow flex flex-col'>
-        {/* HEADER */}
-        <header className='bg-white h-16 px-4 flex items-center justify-between shadow'>
+      {/* Main Container: margin-left to offset fixed sidebar */}
+      <div className='ml-64 flex flex-col w-full'>
+        {/* Header: sticky at the top */}
+        <header className='sticky top-0 z-10 bg-white h-36 px-4 flex items-center justify-between shadow'>
           {/* Left: Search */}
           <div className='flex items-center space-x-4'>
             <input
@@ -181,8 +186,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
           </div>
         </header>
 
-        {/* MAIN PAGE CONTENT */}
-        <main className='p-4 flex-grow'>{children}</main>
+        {/* Main Content: scrollable */}
+        <main className='flex-grow overflow-y-auto p-4'>{children}</main>
       </div>
     </div>
   )

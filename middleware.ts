@@ -1,18 +1,19 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+// middleware.ts
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
-  const token = req.cookies.get('token');
+  const token = req.cookies.get("token");
 
   if (!token) {
-    const loginUrl = new URL('/login', req.url); // Redirect to login page
+    const loginUrl = new URL("/login", req.url);
     return NextResponse.redirect(loginUrl);
   }
 
-  // Debug: Log token for verification
-  console.log('Token found:', token);
+  console.log("Token found:", token);
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/moje-konto', '/moje-konto/:path*'], // Protect these routes
+  matcher: ["/dashboard/:path*", "/moje-konto/:path*"], // Protect these routes
 };
