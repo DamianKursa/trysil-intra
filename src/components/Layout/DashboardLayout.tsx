@@ -56,8 +56,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
 
   return (
     <div className='h-screen flex bg-gray-100'>
-      {/* Sidebar: fixed on left */}
-      <aside className='w-64 fixed left-0 top-0 h-screen bg-white shadow-lg'>
+      {/* Desktop Sidebar */}
+      <aside className='hidden md:block w-64 fixed left-0 top-0 h-screen bg-white shadow-lg'>
         <div className='p-6 border-b'>
           <img
             src='/images/logo.webp'
@@ -135,17 +135,128 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                 </span>
               </Link>
             </li>
-            {/* Add more nav links as needed */}
           </ul>
-          {/* Calendar Section */}
           <div className='mt-8'>
             <CalendarSection />
           </div>
         </nav>
       </aside>
 
-      {/* Main Container: margin-left to offset fixed sidebar */}
-      <div className='ml-64 flex flex-col w-full'>
+      {/* Mobile Bottom Navigation */}
+      <nav className='md:hidden fixed bottom-0 left-0 w-full bg-white shadow-t z-50'>
+        <ul className='flex justify-around p-2'>
+          <li>
+            <Link href='/dashboard'>
+              <span className='flex flex-col items-center text-gray-600'>
+                <svg
+                  className='w-6 h-6'
+                  fill='none'
+                  stroke='currentColor'
+                  strokeWidth='2'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M3 3h18M9 9h6m-6 4h6m-6 4h6'
+                  />
+                </svg>
+                <span className='text-xs'>Dashboard</span>
+              </span>
+            </Link>
+          </li>
+          <li>
+            <Link href='#'>
+              <span className='flex flex-col items-center text-gray-600'>
+                <svg
+                  className='w-6 h-6'
+                  fill='none'
+                  stroke='currentColor'
+                  strokeWidth='2'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M8 6h13M8 12h9m-9 6h13M3 6h.01M3 12h.01M3 18h.01'
+                  />
+                </svg>
+                <span className='text-xs'>Tables</span>
+              </span>
+            </Link>
+          </li>
+          <li>
+            <Link href='#'>
+              <span className='flex flex-col items-center text-gray-600'>
+                <svg
+                  className='w-6 h-6'
+                  fill='none'
+                  stroke='currentColor'
+                  strokeWidth='2'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M12 8c-1.657 0-3 1.79-3 4s1.343 4 3 4 3-1.79 3-4-1.343-4-3-4z'
+                  />
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M19.458 8.667C20.732 9.34 22 10.642 22 12c0 1.357-1.268 2.66-2.542 3.333C18.267 16.005 16.771 17 15 17H9c-1.771 0-3.267-.995-4.458-1.667C3.268 14.66 2 13.357 2 12c0-1.358 1.268-2.66 2.542-3.333C5.733 7.995 7.229 7 9 7h6c1.771 0 3.267.995 4.458 1.667z'
+                  />
+                </svg>
+                <span className='text-xs'>Analytics</span>
+              </span>
+            </Link>
+          </li>
+          <li>
+            {user ? (
+              <button
+                onClick={handleLogout}
+                className='flex flex-col items-center text-gray-600'
+              >
+                <svg
+                  className='w-6 h-6'
+                  fill='none'
+                  stroke='currentColor'
+                  strokeWidth='2'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M17 16l4-4m0 0l-4-4m4 4H7'
+                  />
+                </svg>
+                <span className='text-xs'>Logout</span>
+              </button>
+            ) : (
+              <Link href='/login'>
+                <span className='flex flex-col items-center text-gray-600'>
+                  <svg
+                    className='w-6 h-6'
+                    fill='none'
+                    stroke='currentColor'
+                    strokeWidth='2'
+                    viewBox='0 0 24 24'
+                  >
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      d='M5 12h14'
+                    />
+                  </svg>
+                  <span className='text-xs'>Login</span>
+                </span>
+              </Link>
+            )}
+          </li>
+        </ul>
+      </nav>
+
+      {/* Main Container */}
+      <div className='md:ml-64 flex flex-col w-full'>
         {/* Header: sticky at the top */}
         <header className='sticky top-0 z-10 bg-white h-36 px-4 flex items-center justify-between shadow'>
           {/* Left: Search */}
@@ -157,8 +268,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
               onFocus={() => setSearchOpen(true)}
             />
           </div>
-          {/* Right: User Profile */}
-          <div className='flex items-center space-x-4 relative'>
+          {/* Right: User Profile (visible on desktop only) */}
+          <div className='hidden md:flex items-center space-x-4 relative'>
             {loading && <span>Loading...</span>}
             {error && <span className='text-red-500'>{error}</span>}
             {user && (
