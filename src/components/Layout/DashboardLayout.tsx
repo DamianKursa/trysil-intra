@@ -1,10 +1,9 @@
 // components/Layout/DashboardLayout.tsx
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, ChangeEvent } from "react"
 import Link from "next/link"
 import axios from "axios"
 import { useRouter } from "next/router"
 import CalendarSection from "@/components/Calendar/CalendarSection"
-import UserSearchComponent from "@/components/Search/UserSearchComponent"
 import InstallPromptModal from "@/components/UI/InstallPromptModal"
 
 interface DashboardLayoutProps {
@@ -16,6 +15,14 @@ interface UserProfileData {
   name: string
   username: string
   email: string
+  avatar?: string
+}
+
+interface UserProfile {
+  id: number
+  name: string
+  email: string
+  avatar?: string
 }
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
@@ -23,7 +30,10 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const [dropdownOpen, setDropdownOpen] = useState(false)
-  const [searchOpen, setSearchOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [searchResults, setSearchResults] = useState<UserProfile[]>([])
+  const [searchLoading, setSearchLoading] = useState(false)
+  const [searchError, setSearchError] = useState("")
   const router = useRouter()
 
   useEffect(() => {
@@ -54,85 +64,148 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
     }
   }
 
+  const handleSearch = async (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setSearchQuery(value)
+    if (value.length < 3) {
+      setSearchResults([])
+      setSearchError("")
+      return
+    }
+    setSearchLoading(true)
+    try {
+      const res = await fetch(
+        `/api/users/search?query=${encodeURIComponent(value)}`
+      )
+      if (!res.ok) {
+        throw new Error("Error fetching search results")
+      }
+      const users: UserProfile[] = await res.json()
+      setSearchResults(users)
+    } catch (err: any) {
+      console.error("Error fetching search results:", err)
+      setSearchError("Error fetching search results")
+    } finally {
+      setSearchLoading(false)
+    }
+  }
+
   return (
     <div className='h-screen flex bg-gray-100'>
       {/* Desktop Sidebar */}
       <aside className='hidden md:block w-64 fixed left-0 top-0 h-screen bg-white shadow-lg'>
         <div className='p-6 border-b'>
-          <img
-            src='/images/logo.webp'
-            alt='Trysil RMM Logo'
-            className='h-10 mx-auto'
-          />
+          <Link href='/'>
+            <img
+              src='/images/logo.webp'
+              alt='Trysil RMM Logo'
+              className='h-10 mx-auto'
+            />
+          </Link>
         </div>
         <nav className='p-4'>
           <ul className='space-y-2'>
             <li>
-              <Link href='/dashboard'>
-                <span className='flex items-center p-2 rounded hover:bg-gray-200 transition-colors cursor-pointer'>
-                  {/* Dashboard Icon */}
-                  <svg
-                    className='w-5 h-5 mr-3 text-gray-600'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeWidth='2'
-                    viewBox='0 0 24 24'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      d='M3 3h18M9 9h6m-6 4h6m-6 4h6'
-                    />
-                  </svg>
-                  Dashboard
-                </span>
+              <Link
+                className='flex items-center p-2 rounded hover:bg-gray-200 transition-colors cursor-pointer'
+                href='/blog/category/news'
+              >
+                {/* News Icon */}
+                <svg
+                  className='w-5 h-5 mr-3 text-gray-600'
+                  fill='none'
+                  stroke='currentColor'
+                  strokeWidth='2'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M19 21H5a2 2 0 01-2-2V7a2 2 0 012-2h4l2-2h4l2 2h4a2 2 0 012 2v12a2 2 0 01-2 2z'
+                  />
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M9 9h6m-6 4h6'
+                  />
+                </svg>
+                News
               </Link>
             </li>
             <li>
-              <Link href='#'>
-                <span className='flex items-center p-2 rounded hover:bg-gray-200 transition-colors cursor-pointer'>
-                  {/* Tables Icon */}
-                  <svg
-                    className='w-5 h-5 mr-3 text-gray-600'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeWidth='2'
-                    viewBox='0 0 24 24'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      d='M8 6h13M8 12h9m-9 6h13M3 6h.01M3 12h.01M3 18h.01'
-                    />
-                  </svg>
-                  Tables
-                </span>
+              <Link
+                className='flex items-center p-2 rounded hover:bg-gray-200 transition-colors cursor-pointer'
+                href='/blog/category/sales-and-market'
+              >
+                {/* Sales & Market Icon */}
+                <svg
+                  className='w-5 h-5 mr-3 text-gray-600'
+                  fill='none'
+                  stroke='currentColor'
+                  strokeWidth='2'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0-2a6 6 0 016 6 6 6 0 01-6 6 6 6 0 01-6-6 6 6 0 016-6z'
+                  />
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M12 2v2m0 16v2m-8-8h2m12 0h2'
+                  />
+                </svg>
+                Sales & Market
               </Link>
             </li>
             <li>
-              <Link href='#'>
-                <span className='flex items-center p-2 rounded hover:bg-gray-200 transition-colors cursor-pointer'>
-                  {/* Analytics Icon */}
-                  <svg
-                    className='w-5 h-5 mr-3 text-gray-600'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeWidth='2'
-                    viewBox='0 0 24 24'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      d='M12 8c-1.657 0-3 1.79-3 4s1.343 4 3 4 3-1.79 3-4-1.343-4-3-4z'
-                    />
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      d='M19.458 8.667C20.732 9.34 22 10.642 22 12c0 1.357-1.268 2.66-2.542 3.333C18.267 16.005 16.771 17 15 17H9c-1.771 0-3.267-.995-4.458-1.667C3.268 14.66 2 13.357 2 12c0-1.358 1.268-2.66 2.542-3.333C5.733 7.995 7.229 7 9 7h6c1.771 0 3.267.995 4.458 1.667z'
-                    />
-                  </svg>
-                  Analytics
-                </span>
+              <Link
+                className='flex items-center p-2 rounded hover:bg-gray-200 transition-colors cursor-pointer'
+                href='/blog/category/economy'
+              >
+                {/* Economy Icon */}
+                <svg
+                  className='w-5 h-5 mr-3 text-gray-600'
+                  fill='none'
+                  stroke='currentColor'
+                  strokeWidth='2'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M3 3v18h18'
+                  />
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M3 17l7-7 4 4 7-7'
+                  />
+                </svg>
+                Economy
+              </Link>
+            </li>
+            <li>
+              <Link
+                className='flex items-center p-2 rounded hover:bg-gray-200 transition-colors cursor-pointer'
+                href='/moje-konto'
+              >
+                {/* My Account Icon */}
+                <svg
+                  className='w-5 h-5 mr-3 text-gray-600'
+                  fill='none'
+                  stroke='currentColor'
+                  strokeWidth='2'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M5.121 17.804A9 9 0 1118.88 17.804M12 12a4 4 0 100-8 4 4 0 000 8z'
+                  />
+                </svg>
+                My Account
               </Link>
             </li>
           </ul>
@@ -143,114 +216,106 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
       </aside>
 
       {/* Mobile Bottom Navigation */}
-      <nav className='md:hidden fixed bottom-0 left-0 w-full bg-white shadow-t z-50'>
+      <nav className='md:hidden fixed bottom-0 left-0 w-full bg-white shadow z-50'>
         <ul className='flex justify-around p-2'>
           <li>
-            <Link href='/dashboard'>
-              <span className='flex flex-col items-center text-gray-600'>
-                <svg
-                  className='w-6 h-6'
-                  fill='none'
-                  stroke='currentColor'
-                  strokeWidth='2'
-                  viewBox='0 0 24 24'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    d='M3 3h18M9 9h6m-6 4h6m-6 4h6'
-                  />
-                </svg>
-                <span className='text-xs'>Dashboard</span>
-              </span>
-            </Link>
-          </li>
-          <li>
-            <Link href='#'>
-              <span className='flex flex-col items-center text-gray-600'>
-                <svg
-                  className='w-6 h-6'
-                  fill='none'
-                  stroke='currentColor'
-                  strokeWidth='2'
-                  viewBox='0 0 24 24'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    d='M8 6h13M8 12h9m-9 6h13M3 6h.01M3 12h.01M3 18h.01'
-                  />
-                </svg>
-                <span className='text-xs'>Tables</span>
-              </span>
-            </Link>
-          </li>
-          <li>
-            <Link href='#'>
-              <span className='flex flex-col items-center text-gray-600'>
-                <svg
-                  className='w-6 h-6'
-                  fill='none'
-                  stroke='currentColor'
-                  strokeWidth='2'
-                  viewBox='0 0 24 24'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    d='M12 8c-1.657 0-3 1.79-3 4s1.343 4 3 4 3-1.79 3-4-1.343-4-3-4z'
-                  />
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    d='M19.458 8.667C20.732 9.34 22 10.642 22 12c0 1.357-1.268 2.66-2.542 3.333C18.267 16.005 16.771 17 15 17H9c-1.771 0-3.267-.995-4.458-1.667C3.268 14.66 2 13.357 2 12c0-1.358 1.268-2.66 2.542-3.333C5.733 7.995 7.229 7 9 7h6c1.771 0 3.267.995 4.458 1.667z'
-                  />
-                </svg>
-                <span className='text-xs'>Analytics</span>
-              </span>
-            </Link>
-          </li>
-          <li>
-            {user ? (
-              <button
-                onClick={handleLogout}
-                className='flex flex-col items-center text-gray-600'
+            <Link
+              className='flex flex-col items-center text-gray-600'
+              href='/blog/category/news'
+            >
+              <svg
+                className='w-6 h-6'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth='2'
+                viewBox='0 0 24 24'
               >
-                <svg
-                  className='w-6 h-6'
-                  fill='none'
-                  stroke='currentColor'
-                  strokeWidth='2'
-                  viewBox='0 0 24 24'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    d='M17 16l4-4m0 0l-4-4m4 4H7'
-                  />
-                </svg>
-                <span className='text-xs'>Logout</span>
-              </button>
-            ) : (
-              <Link href='/login'>
-                <span className='flex flex-col items-center text-gray-600'>
-                  <svg
-                    className='w-6 h-6'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeWidth='2'
-                    viewBox='0 0 24 24'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      d='M5 12h14'
-                    />
-                  </svg>
-                  <span className='text-xs'>Login</span>
-                </span>
-              </Link>
-            )}
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M19 21H5a2 2 0 01-2-2V7a2 2 0 012-2h4l2-2h4l2 2h4a2 2 0 012 2v12a2 2 0 01-2 2z'
+                />
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M9 9h6m-6 4h6'
+                />
+              </svg>
+              <span className='text-xs'>News</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              className='flex flex-col items-center text-gray-600'
+              href='/blog/category/sales-and-market'
+            >
+              <svg
+                className='w-6 h-6'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth='2'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0-2a6 6 0 016 6 6 6 0 01-6 6 6 6 0 01-6-6 6 6 0 016-6z'
+                />
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M12 2v2m0 16v2m-8-8h2m12 0h2'
+                />
+              </svg>
+              <span className='text-xs'>Sales & Market</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              className='flex flex-col items-center text-gray-600'
+              href='/blog/category/economy'
+            >
+              <svg
+                className='w-6 h-6'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth='2'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M3 3v18h18'
+                />
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M3 17l7-7 4 4 7-7'
+                />
+              </svg>
+              <span className='text-xs'>Economy</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              className='flex flex-col items-center text-gray-600'
+              href='/moje-konto'
+            >
+              <svg
+                className='w-6 h-6'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth='2'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M5.121 17.804A9 9 0 1118.88 17.804M12 12a4 4 0 100-8 4 4 0 000 8z'
+                />
+              </svg>
+              <span className='text-xs'>My Account</span>
+            </Link>
           </li>
         </ul>
       </nav>
@@ -265,10 +330,10 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
               type='text'
               placeholder='Type to search...'
               className='border border-gray-300 rounded-full px-3 py-1 focus:outline-none'
-              onFocus={() => setSearchOpen(true)}
+              onChange={(e) => handleSearch(e)}
             />
           </div>
-          {/* Right: User Profile (visible on desktop only) */}
+          {/* Right: User Profile (desktop only) */}
           <div className='hidden md:flex items-center space-x-4 relative'>
             {loading && <span>Loading...</span>}
             {error && <span className='text-red-500'>{error}</span>}
@@ -294,21 +359,54 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
               </div>
             )}
             {!user && !loading && !error && (
-              <Link href='/login' className='text-blue-600 hover:underline'>
+              <Link className='text-blue-600 hover:underline' href='/login'>
                 Login
               </Link>
             )}
           </div>
         </header>
 
-        {/* Main Content: scrollable */}
+        {/* Inline Search Results */}
+        {searchQuery.length >= 3 && (
+          <div className='p-4 bg-white shadow rounded mb-4'>
+            {searchLoading ? (
+              <p>Searching...</p>
+            ) : searchError ? (
+              <p className='text-red-500'>{searchError}</p>
+            ) : searchResults.length > 0 ? (
+              <ul className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
+                {searchResults.map((result) => (
+                  <li key={result.id} className='border p-4 rounded-lg'>
+                    <Link
+                      className='flex flex-col items-center'
+                      href={`/users/${result.id}`}
+                    >
+                      {result.avatar ? (
+                        <img
+                          src={result.avatar}
+                          alt={result.name}
+                          className='w-20 h-20 rounded-full object-cover'
+                        />
+                      ) : (
+                        <div className='w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center'>
+                          <span className='text-gray-500'>No Image</span>
+                        </div>
+                      )}
+                      <p className='mt-2 text-sm font-medium'>{result.name}</p>
+                      <p className='text-xs text-gray-500'>{result.email}</p>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No users found for "{searchQuery}".</p>
+            )}
+          </div>
+        )}
+
+        {/* Main Content */}
         <main className='flex-grow overflow-y-auto p-4'>{children}</main>
       </div>
-
-      {/* Search Modal */}
-      {searchOpen && (
-        <UserSearchComponent onClose={() => setSearchOpen(false)} />
-      )}
 
       {/* Optional: Install Prompt Modal */}
       <InstallPromptModal />

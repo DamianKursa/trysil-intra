@@ -105,7 +105,7 @@ const CategoryPostsSection: React.FC<CategoryPostsSectionProps> = ({
       {/* "Show All" Button */}
       <div className='mt-4 text-center'>
         <Link
-          href={`/blog/${categorySlug}`}
+          href={`/blog/category/${categorySlug}`}
           className='text-[#FC7E02] underline'
         >
           Show All
