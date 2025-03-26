@@ -23,6 +23,10 @@
   "license": "ISC",
   "dependencies": {
     "@apollo/client": "^3.11.4",
+    "@azure/msal-browser": "^4.9.0",
+    "@azure/msal-node": "^3.4.1",
+    "@azure/msal-react": "^3.0.8",
+    "@microsoft/microsoft-graph-client": "^3.0.7",
     "@types/react": "^18.3.4",
     "@vercel/speed-insights": "^1.1.0",
     "@woocommerce/woocommerce-rest-api": "^1.0.1",
@@ -36,6 +40,7 @@
     "framer-motion": "11.3.29",
     "graphql": "^16.9.0",
     "instagram-web-api": "^2.2.2",
+    "isomorphic-fetch": "^3.0.0",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "lodash.debounce": "^4.0.8",

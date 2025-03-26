@@ -329,7 +329,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             <input
               type='text'
               placeholder='Type to search...'
-              className='border border-gray-300 rounded-full px-3 py-1 focus:outline-none'
+              className='border border-gray-300 min-w-[400px] rounded-full px-3 py-1 focus:outline-none'
               onChange={(e) => handleSearch(e)}
             />
           </div>
