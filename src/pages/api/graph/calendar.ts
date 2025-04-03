@@ -21,9 +21,7 @@ const cca = new ConfidentialClientApplication(msalConfig);
  * Replace with the actual email addresses of the shared calendars.
  */
 const SHARED_MAILBOXES = [
-  "sharedCalendar1@yourdomain.com",
-  "sharedCalendar2@yourdomain.com",
-  "sharedCalendar3@yourdomain.com",
+  "Felleskalender@trysilrmm.com",
 ];
 
 /**

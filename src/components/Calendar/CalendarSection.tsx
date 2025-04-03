@@ -4,7 +4,7 @@ import CalendarEvents from "./CalendarEvents"
 
 const CalendarSection: React.FC = () => {
   return (
-    <div className='bg-white p-4 rounded shadow'>
+    <div className='bg-white rounded shadow'>
       <CalendarEvents />
     </div>
   )
