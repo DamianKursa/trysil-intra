@@ -409,7 +409,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
       </div>
 
       {/* Optional: Install Prompt Modal */}
-      <InstallPromptModal />
+      {/*<InstallPromptModal />*/}
     </div>
   )
 }
