@@ -8,85 +8,70 @@ interface Post {
   title: { rendered: string }
   slug: string
   _embedded?: {
-    "wp:featuredmedia"?: Array<{
-      source_url: string
-    }>
+    "wp:featuredmedia"?: Array<{ source_url: string }>
   }
 }
 
-interface CategoryPostsSectionProps {
+interface Props {
   categorySlug: string
   title: string
 }
 
-const CategoryPostsSection: React.FC<CategoryPostsSectionProps> = ({
-  categorySlug,
-  title,
-}) => {
+const CategoryPostsSection: React.FC<Props> = ({ categorySlug, title }) => {
   const [posts, setPosts] = useState<Post[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
 
-  // Fetch posts for the given category slug
-  const fetchPosts = async () => {
-    try {
+  useEffect(() => {
+    const fetchPosts = async () => {
       setLoading(true)
       setError("")
-      // Get category info by slug to obtain its ID
-      const catRes = await axios.get(
-        `${process.env.NEXT_PUBLIC_WORDPRESS_API_URL}/wp-json/wp/v2/categories?slug=${categorySlug}`
-      )
-      if (catRes.data.length === 0) {
-        throw new Error("Category not found")
-      }
-      const categoryId = catRes.data[0].id
-      // Fetch posts for that category, limit to 4 posts
-      const postsRes = await axios.get(
-        `${process.env.NEXT_PUBLIC_WORDPRESS_API_URL}/wp-json/wp/v2/posts`,
-        {
+      try {
+        const res = await axios.get("/api/posts", {
           params: {
-            categories: categoryId,
+            categorySlug,
             per_page: 4,
-            _embed: true,
           },
-        }
-      )
-      setPosts(postsRes.data)
-    } catch (err: any) {
-      setError(err.message || "Failed to load posts")
-    } finally {
-      setLoading(false)
+        })
+        setPosts(res.data.posts)
+      } catch (e: any) {
+        console.error(e)
+        setError("Failed to load posts")
+      } finally {
+        setLoading(false)
+      }
     }
-  }
-
-  useEffect(() => {
     fetchPosts()
   }, [categorySlug])
 
   return (
     <section className='mb-8'>
-      {/* Title is a link to the blog category page */}
       <Link
-        href={`/blog/${categorySlug}`}
+        href={`/blog/category/${categorySlug}`}
         className='text-[#FC7E02] text-[35px] font-bold mb-4 block'
       >
         {title}
       </Link>
-      {loading && <p>Loading...</p>}
+
+      {loading && <p>Loading…</p>}
       {error && <p className='text-red-500'>{error}</p>}
+
+      {!loading && !error && posts.length === 0 && (
+        <p>No posts available in this category for your country.</p>
+      )}
+
       <ul className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4'>
         {posts.map((post) => {
-          const featuredImage =
-            post._embedded?.["wp:featuredmedia"]?.[0]?.source_url
+          const img = post._embedded?.["wp:featuredmedia"]?.[0]?.source_url
           return (
             <li key={post.id}>
               <Link
                 href={`/blog/${post.slug}`}
                 className='block rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300'
               >
-                {featuredImage && (
+                {img && (
                   <img
-                    src={featuredImage}
+                    src={img}
                     alt={post.title.rendered}
                     className='w-full h-48 object-cover'
                   />
@@ -102,15 +87,6 @@ const CategoryPostsSection: React.FC<CategoryPostsSectionProps> = ({
           )
         })}
       </ul>
-      {/* "Show All" Button */}
-      <div className='mt-4 text-center'>
-        <Link
-          href={`/blog/category/${categorySlug}`}
-          className='text-[#FC7E02] underline'
-        >
-          Show All
-        </Link>
-      </div>
     </section>
   )
 }
