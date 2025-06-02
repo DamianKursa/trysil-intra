@@ -1,4 +1,5 @@
-// File:  pages/blog/category/[slug].tsx
+// pages/blog/category/[slug].tsx
+
 import { GetServerSideProps } from "next"
 import axios from "axios"
 import DashboardLayout from "@/components/Layout/DashboardLayout"
@@ -30,7 +31,6 @@ const BlogCategoryPage: React.FC<BlogCategoryPageProps> = ({
         <h1 className='text-[#FC7E02] text-[35px] font-bold mb-8'>
           {categoryName}
         </h1>
-
         {posts.length === 0 ? (
           <p>No posts found in this category.</p>
         ) : (
@@ -85,29 +85,27 @@ export const getServerSideProps: GetServerSideProps = async ({
   req,
 }) => {
   const { slug } = params as { slug: string }
-
   if (!slug) {
     return { notFound: true }
   }
 
-  // 1) Fetch the category’s name so we can display it
+  // 1) Fetch category name
   let categoryName = ""
   try {
     const catRes = await axios.get(
       `${process.env.NEXT_PUBLIC_WORDPRESS_API_URL}/wp-json/wp/v2/categories?slug=${slug}`
     )
-    if (Array.isArray(catRes.data) && catRes.data.length > 0) {
+    if (catRes.data.length > 0) {
       categoryName = catRes.data[0].name
     } else {
       return { notFound: true }
     }
   } catch (err) {
-    console.error("Could not fetch category info in getServerSideProps:", err)
+    console.error("Could not fetch category info:", err)
     return { notFound: true }
   }
 
-  // 2) Now call our own `/api/posts` endpoint (which already enforces country filtering).
-  //    We must forward the request’s cookies so that /api/posts can read the token.
+  // 2) Call our own /api/posts, forwarding cookies
   let posts: Post[] = []
   try {
     const protocol = process.env.VERCEL_URL ? "https" : "http"
@@ -115,12 +113,10 @@ export const getServerSideProps: GetServerSideProps = async ({
       process.env.NEXT_PUBLIC_BASE_URL || `${protocol}://${req.headers.host}`
 
     const postsRes = await axios.get(`${baseUrl}/api/posts`, {
-      headers: {
-        Cookie: req.headers.cookie || "",
-      },
+      headers: { Cookie: req.headers.cookie || "" },
       params: {
         categorySlug: slug,
-        per_page: 100, // “all” on the category page
+        per_page: 100,
         page: 1,
       },
     })

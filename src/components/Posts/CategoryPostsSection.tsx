@@ -1,4 +1,5 @@
 // components/Posts/CategoryPostsSection.tsx
+
 import React, { useEffect, useState } from "react"
 import axios from "axios"
 import Link from "next/link"
@@ -28,10 +29,7 @@ const CategoryPostsSection: React.FC<Props> = ({ categorySlug, title }) => {
       setError("")
       try {
         const res = await axios.get("/api/posts", {
-          params: {
-            categorySlug,
-            per_page: 4,
-          },
+          params: { categorySlug, per_page: 4 },
         })
         setPosts(res.data.posts)
       } catch (e: any) {
@@ -46,11 +44,10 @@ const CategoryPostsSection: React.FC<Props> = ({ categorySlug, title }) => {
 
   return (
     <section className='mb-8'>
-      <Link
-        href={`/blog/category/${categorySlug}`}
-        className='text-[#FC7E02] text-[35px] font-bold mb-4 block'
-      >
-        {title}
+      <Link href={`/blog/category/${categorySlug}`}>
+        <a className='text-[#FC7E02] text-[35px] font-bold mb-4 block'>
+          {title}
+        </a>
       </Link>
 
       {loading && <p>Loading…</p>}
@@ -65,23 +62,22 @@ const CategoryPostsSection: React.FC<Props> = ({ categorySlug, title }) => {
           const img = post._embedded?.["wp:featuredmedia"]?.[0]?.source_url
           return (
             <li key={post.id}>
-              <Link
-                href={`/blog/${post.slug}`}
-                className='block rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300'
-              >
-                {img && (
-                  <img
-                    src={img}
-                    alt={post.title.rendered}
-                    className='w-full h-48 object-cover'
-                  />
-                )}
-                <div className='p-4'>
-                  <h3
-                    className='text-lg text-black hover:underline h-12 overflow-hidden'
-                    dangerouslySetInnerHTML={{ __html: post.title.rendered }}
-                  />
-                </div>
+              <Link href={`/blog/${post.slug}`}>
+                <a className='block rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300'>
+                  {img && (
+                    <img
+                      src={img}
+                      alt={post.title.rendered}
+                      className='w-full h-48 object-cover'
+                    />
+                  )}
+                  <div className='p-4'>
+                    <h3
+                      className='text-lg text-black hover:underline h-12 overflow-hidden'
+                      dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+                    />
+                  </div>
+                </a>
               </Link>
             </li>
           )
