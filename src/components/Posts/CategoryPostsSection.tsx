@@ -8,9 +8,7 @@ interface Post {
   id: number
   title: { rendered: string }
   slug: string
-  _embedded?: {
-    "wp:featuredmedia"?: Array<{ source_url: string }>
-  }
+  _embedded?: { "wp:featuredmedia"?: Array<{ source_url: string }> }
 }
 
 interface Props {
@@ -27,18 +25,21 @@ const CategoryPostsSection: React.FC<Props> = ({ categorySlug, title }) => {
     const fetchPosts = async () => {
       setLoading(true)
       setError("")
+
       try {
         const res = await axios.get("/api/posts", {
           params: { categorySlug, per_page: 4 },
+          withCredentials: true, // ← ensures the cookie is sent
         })
         setPosts(res.data.posts)
       } catch (e: any) {
-        console.error(e)
+        console.error("Failed to load posts:", e)
         setError("Failed to load posts")
       } finally {
         setLoading(false)
       }
     }
+
     fetchPosts()
   }, [categorySlug])
 

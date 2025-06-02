@@ -4,11 +4,12 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
 import { parse } from "cookie";
 
-type Post = any;  // You can tighten this up to your actual shape later
+type Post = any;  // (you can tighten this up later)
 type Data =
   | { posts: Post[]; totalPages: number }
   | { error: string };
 
+// Two‐letter country slugs
 const COUNTRY_SLUGS = ["no", "se", "fi", "dk", "is", "ee", "lv", "lt"];
 
 export default async function handler(
@@ -26,7 +27,7 @@ export default async function handler(
   }
 
   //
-  // 1) Determine the logged-in user’s country
+  // 1) Determine the logged‐in user’s country
   //
   let userCountry: string | null = null;
   const cookies = parse(req.headers.cookie || "");
@@ -45,13 +46,13 @@ export default async function handler(
       return res.status(200).json({ posts: [], totalPages: 1 });
     }
   } else {
-    // No token => treat as anonymous (no specific country)
+    // No token → anonymous; treat as “no country”
     userCountry = null;
     console.log("[posts.ts] No token found, treating as anonymous");
   }
 
   //
-  // 2) Look up WP category ID by slug (e.g. “economy” or “news”, etc.)
+  // 2) Look up WP category ID by slug (e.g. “economy”)
   //
   let categoryId: number | null = null;
   try {
@@ -68,12 +69,12 @@ export default async function handler(
     return res.status(500).json({ error: "Failed to fetch category" });
   }
   if (!categoryId) {
-    // If the slug doesn't exist in WP, return empty
+    // If the slug doesn’t exist in WP, return empty
     return res.status(200).json({ posts: [], totalPages: 1 });
   }
 
   //
-  // 3) Fetch all posts that belong to that categoryId, embedding their categories
+  // 3) Fetch all posts in that “main” category, embedding their categories
   //
   let allPosts: any[] = [];
   let totalPages = 1;
@@ -91,46 +92,55 @@ export default async function handler(
     );
     allPosts = postsRes.data;
     totalPages = parseInt(postsRes.headers["x-wp-totalpages"] || "1", 10);
-    console.log(`[posts.ts] fetched ${allPosts.length} posts from WP (page ${page})`);
+    console.log(
+      `[posts.ts] fetched ${allPosts.length} posts from WP (page ${page})`
+    );
   } catch (err: any) {
-    console.error("[posts.ts] Error fetching posts:", err.response?.data || err.message);
+    console.error(
+      "[posts.ts] Error fetching posts:",
+      err.response?.data || err.message
+    );
     return res.status(500).json({ error: "Failed to fetch posts" });
   }
 
   //
   // 4) Filter logic:
-  //    - Keep only posts that have “categorySlug” in their term list
-  //    - If a post also has a country‐slug (e.g. “no”, “se”, etc.), only keep it if that country‐slug === userCountry
-  //    - If a post has no country‐slug at all, it is shown to everyone
+  //    • Only keep posts that have at least one country‐slug in their terms.
+  //    • Among those, only keep if that country‐slug === userCountry.
   //
   const filtered = allPosts.filter((post) => {
-    // a) Extract the array of category slugs for this post
+    // a) Grab every category‐slug for this post from _embedded
     const categoryTerms: any[] = post._embedded?.["wp:term"]?.[0] || [];
     const slugs: string[] = categoryTerms.map((c) => c.slug);
 
-    // b) Must have the “main” categorySlug in its slugs
+    // b) If this post does not even have the “main” categorySlug (shouldn’t happen
+    //    because we already filtered by categoryId), skip it as well:
     if (!slugs.includes(categorySlug)) {
       return false;
     }
 
-    // c) Check if this post has any “country tag”:
+    // c) Look for any two‐letter country slug in this post’s categories
     const postCountryTag = slugs.find((s) => COUNTRY_SLUGS.includes(s));
 
-    if (postCountryTag) {
-      // If the post has a country‐category, only keep if it matches userCountry
-      const keep = postCountryTag === userCountry;
+    if (!postCountryTag) {
+      // **NEW BEHAVIOR**: if the post has NO country tag at all, don't show it.
       console.log(
-        `[posts.ts] post #${post.id} has countryTag "${postCountryTag}", userCountry="${userCountry}" → keep? ${keep}`
+        `[posts.ts] post #${post.id} has NO country tag → hide it entirely`
       );
-      return keep;
+      return false;
     }
 
-    // d) If the post has no country‐category at all, allow it for everyone
-    console.log(`[posts.ts] post #${post.id} has no country tag → keep for everyone`);
-    return true;
+    // d) If it _does_ have a country tag, only keep if it matches userCountry
+    const keep = postCountryTag === userCountry;
+    console.log(
+      `[posts.ts] post #${post.id} has countryTag="${postCountryTag}", userCountry="${userCountry}" → keep? ${keep}`
+    );
+    return keep;
   });
 
-  console.log(`[posts.ts] filteredPosts count = ${filtered.length} / total ${allPosts.length}`);
+  console.log(
+    `[posts.ts] filteredPosts count = ${filtered.length} / total ${allPosts.length}`
+  );
 
   //
   // 5) Return the filtered array & totalPages
