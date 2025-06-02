@@ -1,10 +1,9 @@
-// File: pages/api/posts.ts
-
+// File: /pages/api/posts/posts.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
 import { parse } from "cookie";
 
-type Post = any;  // you can tighten this up later
+type Post = any;
 type Data =
   | { posts: Post[]; totalPages: number }
   | { error: string };
@@ -15,30 +14,46 @@ export default async function handler(
 ) {
   const { categorySlug, page = "1", per_page = "10" } = req.query;
 
-  // 1) Figure out the logged‐in user’s country
+  // 1) Figure out the logged-in user’s country
   let userCountry: string | null = null;
   const cookies = parse(req.headers.cookie || "");
+  console.log("[posts.ts] Raw incoming cookies:", req.headers.cookie);
+  console.log("[posts.ts] Parsed cookies:", cookies);
+
   if (cookies.token) {
     try {
-      // Hit your existing /api/auth/user, forwarding the cookie header
-      const userRes = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/user`,
-        { headers: { cookie: req.headers.cookie! } }
-      );
-      userCountry = userRes.data.country; // e.g. "no" or "se" etc.
-    } catch (e: any) {
-      // Log the actual error so you can see why country lookup failed:
-      console.error("Error fetching user country:", e.response?.data || e.message);
-      console.warn("Could not fetch user country, returning no posts");
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+      console.log("[posts.ts] NEXT_PUBLIC_BASE_URL:", baseUrl);
+
+      // Build the URL to our own Next.js endpoint:
+      const userUrl = `${baseUrl}/api/auth/user`;
+      console.log("[posts.ts] Fetching user from:", userUrl);
+
+      const userRes = await axios.get(userUrl, {
+        // forward exactly the same cookie header
+        headers: { cookie: req.headers.cookie as string },
+      });
+      console.log("[posts.ts] auth/user response data:", userRes.data);
+
+      // We expect userRes.data.country to exist.
+      userCountry = (userRes.data as any).country;
+      console.log("[posts.ts] Detected userCountry =", userCountry);
+    } catch (err: any) {
+      console.error("[posts.ts] Error fetching user country:", err.message || err);
+      console.warn("[posts.ts] Full error:", err.response?.data || err);
+      // Return empty if we cannot find the user country
       return res.status(200).json({ posts: [], totalPages: 1 });
     }
+  } else {
+    console.log("[posts.ts] No token cookie present; returning no posts.");
+    return res.status(200).json({ posts: [], totalPages: 1 });
   }
-
-  // Debug: show what categorySlug and userCountry ended up being
-  console.log("DEBUG ← categorySlug:", categorySlug, "userCountry:", userCountry);
 
   // 2) If they’re asking for a category that doesn’t match their country, return empty
   if (typeof categorySlug === "string" && userCountry !== categorySlug) {
+    console.log(
+      `[posts.ts] User country (${userCountry}) != requested categorySlug (${categorySlug}). Returning empty.`
+    );
     return res.status(200).json({ posts: [], totalPages: 1 });
   }
 
@@ -49,15 +64,16 @@ export default async function handler(
       `${process.env.NEXT_PUBLIC_WORDPRESS_API_URL}/wp-json/wp/v2/categories`,
       { params: { slug: categorySlug } }
     );
+    console.log("[posts.ts] Category lookup response:", catRes.data);
     if (Array.isArray(catRes.data) && catRes.data.length > 0) {
       categoryId = catRes.data[0].id;
     }
-  } catch (e: any) {
-    console.error("Failed to fetch category ID:", e.response?.data || e.message);
+  } catch (e) {
+    console.error("[posts.ts] Failed to fetch category ID:", e);
     return res.status(500).json({ error: "Failed to fetch category" });
   }
-
   if (!categoryId) {
+    console.log(`[posts.ts] No categoryId found for slug "${categorySlug}".`);
     return res.status(200).json({ posts: [], totalPages: 1 });
   }
 
@@ -78,9 +94,12 @@ export default async function handler(
       postsRes.headers["x-wp-totalpages"] || "1",
       10
     );
+    console.log(
+      `[posts.ts] Returning ${postsRes.data.length} posts (totalPages=${totalPages}).`
+    );
     return res.status(200).json({ posts: postsRes.data, totalPages });
   } catch (e: any) {
-    console.error("Error fetching posts:", e.response?.data || e.message);
+    console.error("[posts.ts] Error fetching posts:", e.response?.data || e.message);
     return res.status(500).json({ error: "Failed to fetch posts" });
   }
 }
