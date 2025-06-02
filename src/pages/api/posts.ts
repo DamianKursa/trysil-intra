@@ -31,6 +31,10 @@ export default async function handler(
     }
   }
 
+  // ←─── Add console.log here to verify both values ───
+  console.log("DEBUG ← categorySlug:", categorySlug, "userCountry:", userCountry);
+  // ──────────────────────────────────────────────────
+
   // 2) If they’re asking for a category that doesn’t match their country, return empty
   if (typeof categorySlug === "string" && userCountry !== categorySlug) {
     return res.status(200).json({ posts: [], totalPages: 1 });

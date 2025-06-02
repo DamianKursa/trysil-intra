@@ -1,4 +1,4 @@
-// pages/blog/category/[slug].tsx
+// File:  pages/blog/category/[slug].tsx
 import { GetServerSideProps } from "next"
 import axios from "axios"
 import DashboardLayout from "@/components/Layout/DashboardLayout"
@@ -9,9 +9,7 @@ interface Post {
   title: { rendered: string }
   slug: string
   _embedded?: {
-    "wp:featuredmedia"?: Array<{
-      source_url: string
-    }>
+    "wp:featuredmedia"?: Array<{ source_url: string }>
   }
 }
 
@@ -32,6 +30,7 @@ const BlogCategoryPage: React.FC<BlogCategoryPageProps> = ({
         <h1 className='text-[#FC7E02] text-[35px] font-bold mb-8'>
           {categoryName}
         </h1>
+
         {posts.length === 0 ? (
           <p>No posts found in this category.</p>
         ) : (
@@ -68,9 +67,10 @@ const BlogCategoryPage: React.FC<BlogCategoryPageProps> = ({
             })}
           </ul>
         )}
+
         <div className='mt-8 text-center'>
           <Link href='/' legacyBehavior>
-            <a className='text-[#FC7E02] hover:underline'>Back</a>
+            <a className='text-[#FC7E02] hover:underline'>Back to Home</a>
           </Link>
         </div>
       </div>
@@ -80,51 +80,61 @@ const BlogCategoryPage: React.FC<BlogCategoryPageProps> = ({
 
 export default BlogCategoryPage
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const { slug } = params || {}
+export const getServerSideProps: GetServerSideProps = async ({
+  params,
+  req,
+}) => {
+  const { slug } = params as { slug: string }
 
-  if (!slug || typeof slug !== "string") {
+  if (!slug) {
     return { notFound: true }
   }
 
+  // 1) Fetch the category’s name so we can display it
+  let categoryName = ""
   try {
-    // Fetch category info by slug to get its ID and name
     const catRes = await axios.get(
       `${process.env.NEXT_PUBLIC_WORDPRESS_API_URL}/wp-json/wp/v2/categories?slug=${slug}`
     )
-    if (catRes.data.length === 0) {
+    if (Array.isArray(catRes.data) && catRes.data.length > 0) {
+      categoryName = catRes.data[0].name
+    } else {
       return { notFound: true }
     }
-    const category = catRes.data[0]
-    const categoryName = category.name
+  } catch (err) {
+    console.error("Could not fetch category info in getServerSideProps:", err)
+    return { notFound: true }
+  }
 
-    // Fetch all posts for that category (adjust per_page as needed)
-    const postsRes = await axios.get(
-      `${process.env.NEXT_PUBLIC_WORDPRESS_API_URL}/wp-json/wp/v2/posts`,
-      {
-        params: {
-          categories: category.id,
-          per_page: 100, // Use a higher limit for "all posts"
-          _embed: true,
-        },
-      }
-    )
+  // 2) Now call our own `/api/posts` endpoint (which already enforces country filtering).
+  //    We must forward the request’s cookies so that /api/posts can read the token.
+  let posts: Post[] = []
+  try {
+    const protocol = process.env.VERCEL_URL ? "https" : "http"
+    const baseUrl =
+      process.env.NEXT_PUBLIC_BASE_URL || `${protocol}://${req.headers.host}`
 
-    return {
-      props: {
-        categorySlug: slug,
-        categoryName,
-        posts: postsRes.data,
+    const postsRes = await axios.get(`${baseUrl}/api/posts`, {
+      headers: {
+        Cookie: req.headers.cookie || "",
       },
-    }
-  } catch (error) {
-    console.error("Error fetching category posts:", error)
-    return {
-      props: {
+      params: {
         categorySlug: slug,
-        categoryName: "",
-        posts: [],
+        per_page: 100, // “all” on the category page
+        page: 1,
       },
-    }
+    })
+    posts = postsRes.data.posts
+  } catch (err) {
+    console.error("Error fetching /api/posts in getServerSideProps:", err)
+    posts = []
+  }
+
+  return {
+    props: {
+      categorySlug: slug,
+      categoryName,
+      posts,
+    },
   }
 }
