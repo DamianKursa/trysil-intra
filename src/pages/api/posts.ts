@@ -1,4 +1,4 @@
-// pages/api/posts.ts
+// pages/api/posts/posts.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
 import { parse } from "cookie";
