@@ -1,4 +1,4 @@
-// File: pages/api/posts/posts.ts
+// File: pages/api/posts.ts
 
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
