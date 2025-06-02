@@ -21,6 +21,10 @@ const Dashboard: React.FC = () => {
             categorySlug='project-economy'
             title='Project Economy'
           />
+          <CategoryPostsSection
+            categorySlug='corporate-group'
+            title='Corporate group'
+          />
           <WeekCalendar />
         </div>
       </div>
