@@ -23,7 +23,7 @@ const MyAccountPage: React.FC<MyAccountProps> = ({
 }) => {
   return (
     <DashboardLayout>
-      <div className='container mx-auto py-16 px-4 max-w-lg'>
+      <div className='container mx-auto py-16 px-4 max-w-[800px]'>
         <h1 className='text-3xl font-bold mb-6'>Min konto</h1>
 
         <div className='bg-white shadow rounded-lg p-6 flex flex-col items-center'>
