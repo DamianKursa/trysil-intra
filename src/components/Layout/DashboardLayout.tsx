@@ -189,7 +189,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             <li>
               <Link
                 className='flex items-center p-2 rounded hover:bg-gray-200 transition-colors cursor-pointer'
-                href='/moje-konto'
+                href='/min-konto'
               >
                 {/* My Account Icon */}
                 <svg
@@ -205,7 +205,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                     d='M5.121 17.804A9 9 0 1118.88 17.804M12 12a4 4 0 100-8 4 4 0 000 8z'
                   />
                 </svg>
-                My Account
+                Min konto
               </Link>
             </li>
           </ul>
