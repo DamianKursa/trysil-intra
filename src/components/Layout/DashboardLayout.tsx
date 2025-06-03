@@ -188,6 +188,84 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             </li>
             <li>
               <Link
+                className='flex flex-col items-center text-gray-600'
+                href='/blog/category/project-economy'
+              >
+                <svg
+                  className='w-6 h-6'
+                  fill='none'
+                  stroke='currentColor'
+                  strokeWidth='2'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M3 3v18h18'
+                  />
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M3 17l7-7 4 4 7-7'
+                  />
+                </svg>
+                <span className='text-xs'>Project Economy</span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                className='flex flex-col items-center text-gray-600'
+                href='/blog/category/corporate-group'
+              >
+                <svg
+                  className='w-6 h-6'
+                  fill='none'
+                  stroke='currentColor'
+                  strokeWidth='2'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M3 3v18h18'
+                  />
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M3 17l7-7 4 4 7-7'
+                  />
+                </svg>
+                <span className='text-xs'>Corporate Group</span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                className='flex flex-col items-center text-gray-600'
+                href='/blog/category/project'
+              >
+                <svg
+                  className='w-6 h-6'
+                  fill='none'
+                  stroke='currentColor'
+                  strokeWidth='2'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M3 3v18h18'
+                  />
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M3 17l7-7 4 4 7-7'
+                  />
+                </svg>
+                <span className='text-xs'>Project</span>
+              </Link>
+            </li>
+            <li>
+              <Link
                 className='flex items-center p-2 rounded hover:bg-gray-200 transition-colors cursor-pointer'
                 href='/min-konto'
               >
@@ -323,6 +401,84 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                 />
               </svg>
               <span className='text-xs'>Economy</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              className='flex flex-col items-center text-gray-600'
+              href='/blog/category/project-economy'
+            >
+              <svg
+                className='w-6 h-6'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth='2'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M3 3v18h18'
+                />
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M3 17l7-7 4 4 7-7'
+                />
+              </svg>
+              <span className='text-xs'>Project Economy</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              className='flex flex-col items-center text-gray-600'
+              href='/blog/category/corporate-group'
+            >
+              <svg
+                className='w-6 h-6'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth='2'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M3 3v18h18'
+                />
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M3 17l7-7 4 4 7-7'
+                />
+              </svg>
+              <span className='text-xs'>Corporate Group</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              className='flex flex-col items-center text-gray-600'
+              href='/blog/category/project'
+            >
+              <svg
+                className='w-6 h-6'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth='2'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M3 3v18h18'
+                />
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M3 17l7-7 4 4 7-7'
+                />
+              </svg>
+              <span className='text-xs'>Project</span>
             </Link>
           </li>
           <li>
