@@ -188,7 +188,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             </li>
             <li>
               <Link
-                className='flex flex-col items-center text-gray-600'
+                className='flex items-center p-2 rounded hover:bg-gray-200 transition-colors cursor-pointer'
                 href='/blog/category/project-economy'
               >
                 <svg
@@ -216,7 +216,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             </li>
             <li>
               <Link
-                className='flex flex-col items-center text-gray-600'
+                className='flex items-center p-2 rounded hover:bg-gray-200 transition-colors cursor-pointer'
                 href='/blog/category/corporate-group'
               >
                 <svg
@@ -266,7 +266,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             </li>
             <li>
               <Link
-                className='flex flex-col items-center text-gray-600'
+                className='flex items-center p-2 rounded hover:bg-gray-200 transition-colors cursor-pointer'
                 href='/blog/category/project'
               >
                 <svg
