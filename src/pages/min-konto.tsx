@@ -3,6 +3,7 @@ import { GetServerSideProps } from "next"
 import axios from "axios"
 import DashboardLayout from "@/components/Layout/DashboardLayout"
 import Image from "next/image"
+import WeekCalendar from "@/components/Calendar/WeekCalendar"
 
 interface MyAccountProps {
   id: number
@@ -64,6 +65,7 @@ const MyAccountPage: React.FC<MyAccountProps> = ({
               </li>
             </ul>
           </div>
+          <WeekCalendar />
         </div>
       </div>
     </DashboardLayout>

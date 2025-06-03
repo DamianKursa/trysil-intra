@@ -3,7 +3,6 @@ import React from "react"
 import DashboardLayout from "@/components/Layout/DashboardLayout"
 import CategoryPostsSection from "@/components/Posts/CategoryPostsSection"
 import { GetServerSideProps } from "next"
-import WeekCalendar from "@/components/Calendar/WeekCalendar"
 
 const Dashboard: React.FC = () => {
   return (
@@ -25,7 +24,6 @@ const Dashboard: React.FC = () => {
             categorySlug='corporate-group'
             title='Corporate group'
           />
-          <WeekCalendar />
         </div>
       </div>
     </DashboardLayout>
