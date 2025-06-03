@@ -241,9 +241,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
               </Link>
             </li>
           </ul>
-          <div className='mt-8'>
-            <CalendarSection />
-          </div>
         </nav>
       </aside>
 
