@@ -299,7 +299,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
           <li>
             <Link
               className='flex flex-col items-center text-gray-600'
-              href='/moje-konto'
+              href='/min-konto'
             >
               <svg
                 className='w-6 h-6'
@@ -314,7 +314,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                   d='M5.121 17.804A9 9 0 1118.88 17.804M12 12a4 4 0 100-8 4 4 0 000 8z'
                 />
               </svg>
-              <span className='text-xs'>My Account</span>
+              <span className='text-xs'>Min account</span>
             </Link>
           </li>
         </ul>
