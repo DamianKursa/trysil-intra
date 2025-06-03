@@ -210,8 +210,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                     d='M7 13v5m4-9v9m4-5v5'
                   />
                 </svg>
-
-                <span className='text-xs'>Project Economy</span>
+                Project Economy
               </Link>
             </li>
             <li>
@@ -260,8 +259,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                     d='M16 8a4 4 0 118 0 4 4 0 01-8 0z'
                   />
                 </svg>
-
-                <span className='text-xs'>Corporate Group</span>
+                Corporate Group
               </Link>
             </li>
             <li>
@@ -288,8 +286,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                     d='M2 20h20v-8H2v8z'
                   />
                 </svg>
-
-                <span className='text-xs'>Project</span>
+                Project
               </Link>
             </li>
             <li>
