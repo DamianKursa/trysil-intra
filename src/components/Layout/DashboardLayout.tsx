@@ -192,7 +192,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                 href='/blog/category/project-economy'
               >
                 <svg
-                  className='w-6 h-6'
+                  className='w-5 h-5 mr-3 text-gray-600'
                   fill='none'
                   stroke='currentColor'
                   strokeWidth='2'
@@ -203,12 +203,14 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                     strokeLinejoin='round'
                     d='M3 3v18h18'
                   />
+
                   <path
                     strokeLinecap='round'
                     strokeLinejoin='round'
-                    d='M3 17l7-7 4 4 7-7'
+                    d='M7 13v5m4-9v9m4-5v5'
                   />
                 </svg>
+
                 <span className='text-xs'>Project Economy</span>
               </Link>
             </li>
@@ -218,7 +220,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                 href='/blog/category/corporate-group'
               >
                 <svg
-                  className='w-6 h-6'
+                  className='w-5 h-5 mr-3 text-gray-600'
                   fill='none'
                   stroke='currentColor'
                   strokeWidth='2'
@@ -227,14 +229,38 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                   <path
                     strokeLinecap='round'
                     strokeLinejoin='round'
-                    d='M3 3v18h18'
+                    d='M12 14a4 4 0 100-8 4 4 0 000 8z'
+                  />
+
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M6 20v-2a4 4 0 014-4h4a4 4 0 014 4v2'
+                  />
+
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M4 20v-2a4 4 0 014-4h.5'
                   />
                   <path
                     strokeLinecap='round'
                     strokeLinejoin='round'
-                    d='M3 17l7-7 4 4 7-7'
+                    d='M8 8a4 4 0 11-8 0 4 4 0 018 0z'
+                  />
+
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M20 20v-2a4 4 0 00-4-4h-.5'
+                  />
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M16 8a4 4 0 118 0 4 4 0 01-8 0z'
                   />
                 </svg>
+
                 <span className='text-xs'>Corporate Group</span>
               </Link>
             </li>
@@ -244,7 +270,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                 href='/blog/category/project'
               >
                 <svg
-                  className='w-6 h-6'
+                  className='w-5 h-5 mr-3 text-gray-600'
                   fill='none'
                   stroke='currentColor'
                   strokeWidth='2'
@@ -253,14 +279,16 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                   <path
                     strokeLinecap='round'
                     strokeLinejoin='round'
-                    d='M3 3v18h18'
+                    d='M2 12V8a2 2 0 012-2h4V6a2 2 0 012-2h4a2 2 0 012 2v0h4a2 2 0 012 2v4'
                   />
+
                   <path
                     strokeLinecap='round'
                     strokeLinejoin='round'
-                    d='M3 17l7-7 4 4 7-7'
+                    d='M2 20h20v-8H2v8z'
                   />
                 </svg>
+
                 <span className='text-xs'>Project</span>
               </Link>
             </li>
@@ -409,7 +437,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
               href='/blog/category/project-economy'
             >
               <svg
-                className='w-6 h-6'
+                className='w-5 h-5 mr-3 text-gray-600'
                 fill='none'
                 stroke='currentColor'
                 strokeWidth='2'
@@ -420,12 +448,14 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                   strokeLinejoin='round'
                   d='M3 3v18h18'
                 />
+
                 <path
                   strokeLinecap='round'
                   strokeLinejoin='round'
-                  d='M3 17l7-7 4 4 7-7'
+                  d='M7 13v5m4-9v9m4-5v5'
                 />
               </svg>
+
               <span className='text-xs'>Project Economy</span>
             </Link>
           </li>
@@ -435,7 +465,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
               href='/blog/category/corporate-group'
             >
               <svg
-                className='w-6 h-6'
+                className='w-5 h-5 mr-3 text-gray-600'
                 fill='none'
                 stroke='currentColor'
                 strokeWidth='2'
@@ -444,14 +474,38 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                 <path
                   strokeLinecap='round'
                   strokeLinejoin='round'
-                  d='M3 3v18h18'
+                  d='M12 14a4 4 0 100-8 4 4 0 000 8z'
+                />
+
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M6 20v-2a4 4 0 014-4h4a4 4 0 014 4v2'
+                />
+
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M4 20v-2a4 4 0 014-4h.5'
                 />
                 <path
                   strokeLinecap='round'
                   strokeLinejoin='round'
-                  d='M3 17l7-7 4 4 7-7'
+                  d='M8 8a4 4 0 11-8 0 4 4 0 018 0z'
+                />
+
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M20 20v-2a4 4 0 00-4-4h-.5'
+                />
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M16 8a4 4 0 118 0 4 4 0 01-8 0z'
                 />
               </svg>
+
               <span className='text-xs'>Corporate Group</span>
             </Link>
           </li>
@@ -461,7 +515,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
               href='/blog/category/project'
             >
               <svg
-                className='w-6 h-6'
+                className='w-5 h-5 mr-3 text-gray-600'
                 fill='none'
                 stroke='currentColor'
                 strokeWidth='2'
@@ -470,14 +524,16 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                 <path
                   strokeLinecap='round'
                   strokeLinejoin='round'
-                  d='M3 3v18h18'
+                  d='M2 12V8a2 2 0 012-2h4V6a2 2 0 012-2h4a2 2 0 012 2v0h4a2 2 0 012 2v4'
                 />
+
                 <path
                   strokeLinecap='round'
                   strokeLinejoin='round'
-                  d='M3 17l7-7 4 4 7-7'
+                  d='M2 20h20v-8H2v8z'
                 />
               </svg>
+
               <span className='text-xs'>Project</span>
             </Link>
           </li>
