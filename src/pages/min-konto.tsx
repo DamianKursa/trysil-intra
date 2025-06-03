@@ -24,10 +24,10 @@ const MyAccountPage: React.FC<MyAccountProps> = ({
 }) => {
   return (
     <DashboardLayout>
-      <div className='container mx-auto py-16 px-4'>
+      <div className='container mx-auto py-16 px-16'>
         <h1 className='text-3xl font-bold mb-6'>Min konto</h1>
 
-        <div className='bg-white shadow rounded-lg p-6 flex flex-col items-center'>
+        <div className='bg-white shadow rounded-lg p-6 flex flex-col items-left'>
           {avatar ? (
             <Image
               src={avatar}
@@ -42,7 +42,7 @@ const MyAccountPage: React.FC<MyAccountProps> = ({
             </div>
           )}
 
-          <div className='text-center'>
+          <div className='text-left'>
             <p className='text-xl font-semibold'>{name}</p>
             <p className='text-gray-600'>@{username}</p>
           </div>
