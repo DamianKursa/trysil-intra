@@ -2,7 +2,6 @@
 import { GetServerSideProps } from "next"
 import DashboardLayout from "@/components/Layout/DashboardLayout"
 import WeekCalendar from "@/components/Calendar/WeekCalendar"
-import axios from "axios"
 
 const MyCalendarPage: React.FC = () => {
   return (

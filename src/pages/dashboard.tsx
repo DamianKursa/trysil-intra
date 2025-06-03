@@ -24,6 +24,7 @@ const Dashboard: React.FC = () => {
             categorySlug='corporate-group'
             title='Corporate group'
           />
+          <CategoryPostsSection categorySlug='project' title='project' />
         </div>
       </div>
     </DashboardLayout>
