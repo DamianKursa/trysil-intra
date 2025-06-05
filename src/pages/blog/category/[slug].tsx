@@ -40,12 +40,11 @@ const BlogCategoryPage: React.FC<BlogCategoryPageProps> = ({
 
         {subcategories.length > 0 && (
           <div className='mb-8'>
-            <h2 className='text-xl font-semibold mb-2'>Subcategories:</h2>
             <ul className='flex flex-wrap gap-3'>
               {subcategories.map((subcat) => (
                 <li key={subcat.id}>
                   <Link href={`/blog/category/${subcat.slug}`}>
-                    <a className='text-blue-600 hover:underline'>
+                    <a className='text-[#FC7E02] text-[18px] p-4 bg-[#ffffffed0] hover:underline'>
                       {subcat.name}
                     </a>
                   </Link>
