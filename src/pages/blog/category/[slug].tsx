@@ -1,5 +1,3 @@
-// pages/blog/category/[slug].tsx
-
 import { GetServerSideProps } from "next"
 import axios from "axios"
 import DashboardLayout from "@/components/Layout/DashboardLayout"
@@ -14,23 +12,49 @@ interface Post {
   }
 }
 
+interface Subcategory {
+  id: number
+  slug: string
+  name: string
+}
+
 interface BlogCategoryPageProps {
   categorySlug: string
   categoryName: string
   posts: Post[]
+  subcategories: Subcategory[]
 }
 
 const BlogCategoryPage: React.FC<BlogCategoryPageProps> = ({
   categorySlug,
   categoryName,
   posts,
+  subcategories,
 }) => {
   return (
     <DashboardLayout>
       <div className='container mx-auto py-16 px-4'>
-        <h1 className='text-[#FC7E02] text-[35px] font-bold mb-8'>
+        <h1 className='text-[#FC7E02] text-[35px] font-bold mb-6'>
           {categoryName}
         </h1>
+
+        {subcategories.length > 0 && (
+          <div className='mb-8'>
+            <h2 className='text-xl font-semibold mb-2'>Subcategories:</h2>
+            <ul className='flex flex-wrap gap-3'>
+              {subcategories.map((subcat) => (
+                <li key={subcat.id}>
+                  <Link href={`/blog/category/${subcat.slug}`}>
+                    <a className='text-blue-600 hover:underline'>
+                      {subcat.name}
+                    </a>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         {posts.length === 0 ? (
           <p>No posts found in this category.</p>
         ) : (
@@ -89,14 +113,17 @@ export const getServerSideProps: GetServerSideProps = async ({
     return { notFound: true }
   }
 
-  // 1) Fetch category name
   let categoryName = ""
+  let categoryId: number | null = null
+
+  // 1) Fetch category name and ID
   try {
     const catRes = await axios.get(
       `${process.env.NEXT_PUBLIC_WORDPRESS_API_URL}/wp-json/wp/v2/categories?slug=${slug}`
     )
     if (catRes.data.length > 0) {
       categoryName = catRes.data[0].name
+      categoryId = catRes.data[0].id
     } else {
       return { notFound: true }
     }
@@ -105,7 +132,22 @@ export const getServerSideProps: GetServerSideProps = async ({
     return { notFound: true }
   }
 
-  // 2) Call our own /api/posts, forwarding cookies
+  // 2) Fetch subcategories
+  let subcategories: Subcategory[] = []
+  try {
+    const subRes = await axios.get(
+      `${process.env.NEXT_PUBLIC_WORDPRESS_API_URL}/wp-json/wp/v2/categories?parent=${categoryId}&per_page=100`
+    )
+    subcategories = subRes.data.map((cat: any) => ({
+      id: cat.id,
+      slug: cat.slug,
+      name: cat.name,
+    }))
+  } catch (err) {
+    console.error("Could not fetch subcategories:", err)
+  }
+
+  // 3) Call our own /api/posts, forwarding cookies
   let posts: Post[] = []
   try {
     const protocol = process.env.VERCEL_URL ? "https" : "http"
@@ -131,6 +173,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       categorySlug: slug,
       categoryName,
       posts,
+      subcategories,
     },
   }
 }
